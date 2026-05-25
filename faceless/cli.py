@@ -91,6 +91,25 @@ def approve(job_id: int) -> None:
     _set_status(job_id, "approved")
 
 
+@app.command("approve-all")
+def approve_all(niche: str = typer.Option(None)) -> None:
+    """Approve every job currently awaiting review for a niche."""
+    from faceless.db import JobStatus, VideoJob, get_session, init_db
+
+    init_db()
+    niche_id = niche or get_settings().niche
+    with get_session() as s:
+        jobs = (
+            s.query(VideoJob)
+            .filter(VideoJob.niche == niche_id, VideoJob.status == JobStatus.awaiting_review)
+            .all()
+        )
+        for job in jobs:
+            job.status = JobStatus.approved
+        count = len(jobs)
+    console.print(f"[green]Approved {count} job(s).[/green]")
+
+
 @app.command()
 def reject(job_id: int) -> None:
     """Mark a job rejected."""
@@ -109,6 +128,50 @@ def publish(
     niche_id = niche or get_settings().niche
     n = publish_approved(niche_id, limit=limit, dry_run=dry_run)
     console.print(f"[green]Published {n} job(s).[/green]")
+
+
+@app.command()
+def analytics(dry_run: bool = typer.Option(False, "--dry-run")) -> None:
+    """Capture current performance metrics for published uploads."""
+    from faceless.analytics import collect_metrics
+
+    n = collect_metrics(dry_run=dry_run)
+    console.print(f"Captured metrics for {n} upload(s).")
+
+
+@app.command()
+def doctor() -> None:
+    """Check which integrations are configured and ready."""
+    import os
+    import shutil
+
+    s = get_settings()
+    remotion_dir = os.path.join(os.path.dirname(__file__), "render", "remotion")
+    checks: list[tuple[str, bool, str]] = [
+        ("Anthropic (script/ideation)", bool(s.anthropic_api_key), "ANTHROPIC_API_KEY"),
+        ("YouTube discovery", bool(s.youtube_api_key), "YOUTUBE_API_KEY"),
+        ("YouTube upload OAuth", os.path.exists(s.youtube_client_secret_file),
+         s.youtube_client_secret_file),
+        ("ElevenLabs voice", bool(s.elevenlabs_api_key), "ELEVENLABS_API_KEY"),
+        ("Images (fal.ai)", bool(s.image_api_key), "IMAGE_API_KEY"),
+        ("Distribution (Ayrshare)", bool(s.distribution_api_key), "DISTRIBUTION_API_KEY"),
+        ("ffmpeg on PATH", shutil.which("ffmpeg") is not None, "install ffmpeg"),
+        ("Music library", os.path.isdir(s.music_library_dir), s.music_library_dir),
+    ]
+    if s.render_backend.lower() == "remotion":
+        checks.append(
+            ("Remotion installed", os.path.isdir(os.path.join(remotion_dir, "node_modules")),
+             "npm install in faceless/render/remotion")
+        )
+
+    table = Table(title="Faceless readiness")
+    table.add_column("Integration")
+    table.add_column("Status")
+    table.add_column("Set via")
+    for name, ok, hint in checks:
+        table.add_row(name, "[green]OK[/green]" if ok else "[red]missing[/red]", hint)
+    console.print(table)
+    console.print(f"Active niche: [bold]{s.niche}[/bold] | render backend: [bold]{s.render_backend}[/bold]")
 
 
 def _set_status(job_id: int, status: str) -> None:
