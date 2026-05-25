@@ -37,3 +37,4 @@ output/
 # Node (Remotion render project)
 node_modules/
 faceless/render/remotion/out/
+faceless/render/remotion/public/jobs/

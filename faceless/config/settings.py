@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     niche: str = Field(default="self_improvement", alias="FACELESS_NICHE")
     database_url: str = Field(default="sqlite:///data/faceless.sqlite", alias="DATABASE_URL")
     output_dir: str = Field(default="output", alias="OUTPUT_DIR")
+    # Render backend: "ffmpeg" (slideshow, no extra deps) or "remotion" (branded).
+    render_backend: str = Field(default="ffmpeg", alias="RENDER_BACKEND")
+    # Root folder of pre-licensed music; subfolders are selected per niche.
+    music_library_dir: str = Field(default="music", alias="MUSIC_LIBRARY_DIR")
 
     # LLM
     anthropic_api_key: str | None = Field(default=None, alias="ANTHROPIC_API_KEY")

@@ -13,7 +13,7 @@ from faceless.ideation import generate_idea
 from faceless.ideation.analyze import IdeaResult
 from faceless.niches import get_niche
 from faceless.publish import upload_to_youtube
-from faceless.render import assemble_video, make_thumbnail
+from faceless.render import make_thumbnail, render_video
 from faceless.scripting import generate_script
 from faceless.scripting.generate import Shot
 
@@ -117,7 +117,7 @@ def _build_assets_and_render(
     image_paths = generate_images(script.shots, os.path.join(job_dir, "img"), dry_run=dry_run)
     select_music(niche, music_path, dry_run=dry_run)
     generate_captions(script.shots, voice_path, captions_path, dry_run=dry_run)
-    assemble_video(
+    render_video(
         image_paths, script.shots, voice_path, music_path, captions_path, video_path,
         dry_run=dry_run,
     )
