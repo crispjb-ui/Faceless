@@ -36,6 +36,27 @@ pytest                                # smoke tests (all dry-run)
 
 Review UI: `streamlit run faceless/review/app.py` → http://localhost:8501
 
+## Daily operation (automation)
+
+One cycle = publish what you approved since last run → produce a fresh batch for
+review → refresh analytics. The human approval gate sits between runs.
+
+```bash
+faceless daily --produce-limit 7 --spread-minutes 90   # one cycle (for cron)
+```
+
+Schedule it with cron (see `scripts/cron.example`) or Prefect:
+
+```bash
+pip install -e ".[orchestration]"
+python -m faceless.orchestrator.prefect_flow   # serves a daily 14:00 UTC schedule
+```
+
+Day-to-day you only touch the **review queue**: open the Streamlit dashboard (or
+run `faceless approve-all`), approve/reject, and approvals go live on the next
+run. `--spread-minutes` staggers each video's scheduled publish time so a batch
+trickles out instead of dropping at once.
+
 ## Configuration
 
 Copy `.env.example` to `.env`. Keys are optional until a stage needs one:

@@ -4,7 +4,7 @@ import os
 
 from faceless.db import JobStatus, VideoJob, get_session
 from faceless.niches import get_niche, list_niches
-from faceless.orchestrator import produce_batch
+from faceless.orchestrator import daily_flow, produce_batch
 
 
 def test_self_improvement_registered():
@@ -26,3 +26,12 @@ def test_dry_run_batch_produces_reviewable_jobs():
             assert job.status == JobStatus.awaiting_review
             assert job.video_path and os.path.exists(job.video_path)
             assert job.script is not None
+
+
+def test_daily_flow_dry_run_isolated_stages():
+    result = daily_flow("self_improvement", produce_limit=2, dry_run=True)
+    assert result.errors == []
+    assert result.produced == 2
+    assert result.awaiting_review == 2
+    # Nothing approved yet on a fresh run, so nothing is published.
+    assert result.published == 0

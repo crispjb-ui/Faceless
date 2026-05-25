@@ -64,6 +64,36 @@ def run(
 
 
 @app.command()
+def daily(
+    niche: str = typer.Option(None, help="Niche id (defaults to FACELESS_NICHE)"),
+    produce_limit: int = typer.Option(7, help="New videos to produce this run"),
+    publish_limit: int = typer.Option(10, help="Max approved videos to publish this run"),
+    spread_minutes: int = typer.Option(
+        0, help="Stagger scheduled publish times by N minutes each"
+    ),
+    dry_run: bool = typer.Option(False, "--dry-run"),
+) -> None:
+    """Run one daily cycle: publish approved -> produce fresh batch -> analytics.
+
+    Intended to be invoked by cron or a Prefect schedule.
+    """
+    from faceless.orchestrator import daily_flow
+
+    niche_id = niche or get_settings().niche
+    result = daily_flow(
+        niche_id,
+        produce_limit=produce_limit,
+        publish_limit=publish_limit,
+        spread_minutes=spread_minutes,
+        dry_run=dry_run,
+    )
+    console.print(result)
+    if result.errors:
+        console.print("[red]Errors:[/red] " + " | ".join(result.errors))
+        raise typer.Exit(1)
+
+
+@app.command()
 def review(niche: str = typer.Option(None)) -> None:
     """List jobs awaiting human review."""
     from faceless.db import JobStatus, VideoJob, get_session, init_db

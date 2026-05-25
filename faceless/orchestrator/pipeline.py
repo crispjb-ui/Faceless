@@ -132,8 +132,16 @@ def _build_assets_and_render(
         job.status = JobStatus.awaiting_review
 
 
-def publish_approved(niche_id: str, *, limit: int = 10, dry_run: bool = False) -> int:
-    """Upload jobs a human marked `approved` to YouTube (+ distribution)."""
+def publish_approved(
+    niche_id: str, *, limit: int = 10, spread_minutes: int = 0, dry_run: bool = False
+) -> int:
+    """Upload jobs a human marked `approved` to YouTube (+ distribution).
+
+    With spread_minutes > 0, uploads are scheduled (publishAt) staggered into the
+    future so a batch trickles out rather than dropping all at once.
+    """
+    from datetime import datetime, timedelta, timezone
+
     from faceless.db import Upload
     from faceless.distribution import distribute
 
@@ -149,7 +157,7 @@ def publish_approved(niche_id: str, *, limit: int = 10, dry_run: bool = False) -
         )
         job_ids = [j.id for j in jobs]
 
-    for job_id in job_ids:
+    for i, job_id in enumerate(job_ids):
         with get_session() as s:
             job = s.get(VideoJob, job_id)
             script = job.script
@@ -157,14 +165,22 @@ def publish_approved(niche_id: str, *, limit: int = 10, dry_run: bool = False) -
             tags = json.loads(script.tags_json)
             video_path = job.video_path
 
-        result = upload_to_youtube(video_path, title, description, tags, niche, dry_run=dry_run)
+        publish_at = (
+            datetime.now(timezone.utc) + timedelta(minutes=spread_minutes * i)
+            if spread_minutes > 0
+            else None
+        )
+        result = upload_to_youtube(
+            video_path, title, description, tags, niche, publish_at=publish_at, dry_run=dry_run
+        )
         posts = distribute(video_path, title, description, niche, dry_run=dry_run)
 
         with get_session() as s:
             job = s.get(VideoJob, job_id)
             job.status = JobStatus.published
             s.add(Upload(job_id=job_id, platform="youtube_shorts",
-                         platform_video_id=result.video_id, url=result.url))
+                         platform_video_id=result.video_id, url=result.url,
+                         scheduled_for=publish_at))
             for p in posts:
                 s.add(Upload(job_id=job_id, platform=p.platform,
                              platform_video_id=p.platform_video_id, url=p.url))

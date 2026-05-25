@@ -1,0 +1,12 @@
+# Faceless daily factory — crontab example.
+# Install:  crontab -e   (paste a line below; adjust the repo path + interpreter)
+#
+# Each run publishes the videos you approved since the last run, produces a fresh
+# batch into the review queue, and refreshes analytics. Review the queue daily
+# (Streamlit dashboard or `faceless approve-all`); approvals go live next run.
+
+# 14:00 UTC daily, produce 7, stagger published videos 90 min apart, log output.
+0 14 * * * cd /opt/Faceless && /usr/bin/env python -m faceless.cli daily --produce-limit 7 --spread-minutes 90 >> /var/log/faceless.log 2>&1
+
+# Optional: refresh analytics again in the evening.
+0 22 * * * cd /opt/Faceless && /usr/bin/env python -m faceless.cli analytics >> /var/log/faceless.log 2>&1
