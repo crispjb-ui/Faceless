@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: faceless
+      POSTGRES_PASSWORD: faceless
+      POSTGRES_DB: faceless
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://faceless:faceless@db:5432/faceless
+    depends_on:
+      - db
+    volumes:
+      - ./output:/app/output
+    # Default to the daily batch; override for one-off commands.
+    command: ["faceless", "run", "--limit", "5"]
+
+  review:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://faceless:faceless@db:5432/faceless
+    depends_on:
+      - db
+    ports:
+      - "8501:8501"
+    command: ["streamlit", "run", "faceless/review/app.py", "--server.address", "0.0.0.0"]
+
+volumes:
+  pgdata:
