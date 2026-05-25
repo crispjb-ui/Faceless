@@ -218,6 +218,81 @@ def doctor() -> None:
     console.print(f"Active niche: [bold]{s.niche}[/bold] | render backend: [bold]{s.render_backend}[/bold]")
 
 
+funnel_app = typer.Typer(help="Generate funnel assets (lead magnet, journal, emails, page)")
+app.add_typer(funnel_app, name="funnel")
+
+
+def _niche(niche: str | None):
+    from faceless.niches import get_niche
+
+    return get_niche(niche or get_settings().niche)
+
+
+@funnel_app.command("lead-magnet")
+def funnel_lead_magnet(
+    niche: str = typer.Option(None),
+    out: str = typer.Option("output/funnel/lead_magnet.pdf"),
+    dry_run: bool = typer.Option(False, "--dry-run"),
+) -> None:
+    """Generate the free opt-in lead magnet PDF."""
+    from faceless.funnel import generate_lead_magnet
+
+    path = generate_lead_magnet(_niche(niche), out, dry_run=dry_run)
+    console.print(f"[green]Lead magnet:[/green] {path}")
+
+
+@funnel_app.command("journal")
+def funnel_journal(
+    niche: str = typer.Option(None),
+    days: int = typer.Option(30),
+    out: str = typer.Option("output/funnel/journal.pdf"),
+    dry_run: bool = typer.Option(False, "--dry-run"),
+) -> None:
+    """Generate the paid journal/planner interior PDF."""
+    from faceless.funnel import generate_journal
+
+    path = generate_journal(_niche(niche), out, days=days, dry_run=dry_run)
+    console.print(f"[green]Journal ({days} days):[/green] {path}")
+
+
+@funnel_app.command("emails")
+def funnel_emails(
+    niche: str = typer.Option(None),
+    count: int = typer.Option(5),
+    out_dir: str = typer.Option("output/funnel/emails"),
+    dry_run: bool = typer.Option(False, "--dry-run"),
+) -> None:
+    """Generate the welcome email sequence as markdown files."""
+    from faceless.funnel import generate_welcome_sequence
+
+    paths = generate_welcome_sequence(_niche(niche), out_dir, count=count, dry_run=dry_run)
+    console.print(f"[green]Wrote {len(paths)} emails to[/green] {out_dir}")
+
+
+@funnel_app.command("landing")
+def funnel_landing(
+    out: str = typer.Option("output/funnel/landing/index.html"),
+    form_action: str = typer.Option(None, help="Capture endpoint (defaults to STORE_URL)"),
+) -> None:
+    """Generate the mobile-first opt-in landing page."""
+    from faceless.funnel import generate_landing_page
+
+    path = generate_landing_page(out, form_action=form_action)
+    console.print(f"[green]Landing page:[/green] {path}")
+
+
+@funnel_app.command("all")
+def funnel_all(
+    niche: str = typer.Option(None),
+    dry_run: bool = typer.Option(False, "--dry-run"),
+) -> None:
+    """Generate every funnel asset at once."""
+    funnel_lead_magnet(niche=niche, out="output/funnel/lead_magnet.pdf", dry_run=dry_run)
+    funnel_journal(niche=niche, days=30, out="output/funnel/journal.pdf", dry_run=dry_run)
+    funnel_emails(niche=niche, count=5, out_dir="output/funnel/emails", dry_run=dry_run)
+    funnel_landing(out="output/funnel/landing/index.html", form_action=None)
+
+
 def _set_status(job_id: int, status: str) -> None:
     from faceless.db import JobStatus, VideoJob, get_session, init_db
 

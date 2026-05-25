@@ -132,6 +132,18 @@ Hosts rendered videos and provides the public URL used for distribution.
 
 ---
 
+## 7b. Stan.store (bio link + lead magnet + product + emails)
+
+The funnel where videos send viewers. See **[FUNNEL.md](FUNNEL.md)** for the full
+flow; in short:
+1. <https://stan.store/> → sign up → pick your handle (= your bio link).
+2. Generate assets: `faceless funnel all` (lead magnet PDF, journal PDF, welcome
+   emails, landing page).
+3. Add the lead magnet as a **free** product with email collection on; add the
+   journal as a **paid** product; paste the welcome emails into Stan's automation.
+4. `.env`: `BRAND_NAME=...` and `STORE_URL=https://stan.store/<handle>`.
+5. Put the Stan link in every platform bio.
+
 ## 8. (Optional) Hosted Postgres — for servers/CI
 
 SQLite is fine for a single machine. For a server or to share state across

@@ -77,7 +77,7 @@ Copy `.env.example` to `.env`. Keys are optional until a stage needs one:
 | Distribution | `DISTRIBUTION_API_KEY` (multi-platform posting SaaS) |
 | Object storage (optional) | `STORAGE_*` (Cloudflare R2 / S3) |
 
-New here? Get every credential with **[docs/SETUP_ACCOUNTS.md](docs/SETUP_ACCOUNTS.md)** (click-by-click), then follow **[docs/RUNBOOK.md](docs/RUNBOOK.md)** — the day-1 → first-published-video checklist.
+New here? Get every credential with **[docs/SETUP_ACCOUNTS.md](docs/SETUP_ACCOUNTS.md)** (click-by-click), follow **[docs/RUNBOOK.md](docs/RUNBOOK.md)** for the day-1 → first-published-video checklist, and build the money path with **[docs/FUNNEL.md](docs/FUNNEL.md)** (bio link, lead magnet, journal, emails).
 
 ## Implemented vs. wire-up-required
 

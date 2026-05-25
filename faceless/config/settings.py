@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     # Root folder of pre-licensed music; subfolders are selected per niche.
     music_library_dir: str = Field(default="music", alias="MUSIC_LIBRARY_DIR")
 
+    # Funnel / brand
+    brand_name: str = Field(default="Daily Discipline", alias="BRAND_NAME")
+    # Your Stan.store (or other) bio link — where videos drive viewers.
+    store_url: str | None = Field(default=None, alias="STORE_URL")
+
     # LLM
     anthropic_api_key: str | None = Field(default=None, alias="ANTHROPIC_API_KEY")
     anthropic_model: str = Field(default="claude-sonnet-4-6", alias="ANTHROPIC_MODEL")
