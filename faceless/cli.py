@@ -185,6 +185,7 @@ def doctor() -> None:
         ("ElevenLabs voice", bool(s.elevenlabs_api_key), "ELEVENLABS_API_KEY"),
         ("Images (fal.ai)", bool(s.image_api_key), "IMAGE_API_KEY"),
         ("Distribution (Ayrshare)", bool(s.distribution_api_key), "DISTRIBUTION_API_KEY"),
+        ("Object storage (R2/S3)", s.storage_configured, "STORAGE_* (optional)"),
         ("ffmpeg on PATH", shutil.which("ffmpeg") is not None, "install ffmpeg"),
         ("Music library", os.path.isdir(s.music_library_dir), s.music_library_dir),
     ]

@@ -69,6 +69,9 @@ Copy `.env.example` to `.env`. Keys are optional until a stage needs one:
 | Images / Motion / Music | `IMAGE_API_KEY` / `VIDEO_API_KEY` / `MUSIC_API_KEY` |
 | Upload | YouTube OAuth (`client_secret.json`) |
 | Distribution | `DISTRIBUTION_API_KEY` (multi-platform posting SaaS) |
+| Object storage (optional) | `STORAGE_*` (Cloudflare R2 / S3) |
+
+New here? Follow **[docs/RUNBOOK.md](docs/RUNBOOK.md)** — the day-1 → first-published-video checklist.
 
 ## Implemented vs. wire-up-required
 

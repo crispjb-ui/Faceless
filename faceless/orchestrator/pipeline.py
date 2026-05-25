@@ -142,6 +142,7 @@ def publish_approved(
     """
     from datetime import datetime, timedelta, timezone
 
+    from faceless import storage
     from faceless.db import Upload
     from faceless.distribution import distribute
 
@@ -173,7 +174,16 @@ def publish_approved(
         result = upload_to_youtube(
             video_path, title, description, tags, niche, publish_at=publish_at, dry_run=dry_run
         )
-        posts = distribute(video_path, title, description, niche, dry_run=dry_run)
+
+        # If object storage is configured, host the file there and reuse the
+        # public URL as the distribution media source (avoids a second upload).
+        media_url = None
+        if storage.is_configured():
+            key = f"{niche.id}/job_{job_id}/{os.path.basename(video_path)}"
+            media_url = storage.upload_file(video_path, key, dry_run=dry_run)
+        posts = distribute(
+            video_path, title, description, niche, media_url=media_url, dry_run=dry_run
+        )
 
         with get_session() as s:
             job = s.get(VideoJob, job_id)

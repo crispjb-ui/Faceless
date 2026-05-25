@@ -37,13 +37,15 @@ def distribute(
     description: str,
     niche: Niche,
     *,
+    media_url: str | None = None,
     dry_run: bool = False,
 ) -> list[PostResult]:
     """Fan the rendered vertical video out to TikTok / Reels via Ayrshare.
 
-    Ayrshare needs the media at a public URL, so we use its upload-URL flow:
-    request a signed URL, PUT the file, then create the post with the returned
-    access URL. Set DISTRIBUTION_API_KEY to your Ayrshare API key.
+    Ayrshare needs the media at a public URL. If `media_url` is provided (e.g. the
+    file already lives in R2/S3), it's used directly; otherwise we fall back to
+    Ayrshare's upload-URL flow (signed URL -> PUT -> post). Set
+    DISTRIBUTION_API_KEY to your Ayrshare API key.
     """
     targets = _targets(niche)
     if dry_run:
@@ -53,7 +55,7 @@ def distribute(
 
     settings = get_settings()
     headers = {"Authorization": f"Bearer {settings.require('distribution_api_key')}"}
-    access_url = _upload_media(video_path, headers)
+    access_url = media_url or _upload_media(video_path, headers)
 
     body = {
         "post": f"{title}\n\n{description}".strip(),

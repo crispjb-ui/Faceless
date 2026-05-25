@@ -47,6 +47,28 @@ class Settings(BaseSettings):
     music_api_key: str | None = Field(default=None, alias="MUSIC_API_KEY")
     distribution_api_key: str | None = Field(default=None, alias="DISTRIBUTION_API_KEY")
 
+    # Object storage (S3-compatible; Cloudflare R2 recommended)
+    storage_endpoint_url: str | None = Field(default=None, alias="STORAGE_ENDPOINT_URL")
+    storage_bucket: str | None = Field(default=None, alias="STORAGE_BUCKET")
+    storage_access_key_id: str | None = Field(default=None, alias="STORAGE_ACCESS_KEY_ID")
+    storage_secret_access_key: str | None = Field(
+        default=None, alias="STORAGE_SECRET_ACCESS_KEY"
+    )
+    storage_public_base_url: str | None = Field(default=None, alias="STORAGE_PUBLIC_BASE_URL")
+    storage_region: str = Field(default="auto", alias="STORAGE_REGION")
+
+    @property
+    def storage_configured(self) -> bool:
+        return all(
+            [
+                self.storage_endpoint_url,
+                self.storage_bucket,
+                self.storage_access_key_id,
+                self.storage_secret_access_key,
+                self.storage_public_base_url,
+            ]
+        )
+
     def require(self, attr: str) -> str:
         """Return a required secret or raise a clear, actionable error."""
         value = getattr(self, attr, None)

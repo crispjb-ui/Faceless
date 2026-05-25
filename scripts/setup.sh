@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 echo "==> Installing Python package + extras"
-pip install -e ".[assets,review,dev]"
+pip install -e ".[assets,storage,review,dev]"
 
 echo "==> Preparing .env"
 if [ ! -f .env ]; then
