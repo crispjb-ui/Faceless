@@ -5,6 +5,7 @@ import os
 import shutil
 import subprocess
 
+from faceless.assets.captions import CaptionSegment
 from faceless.scripting.generate import Shot
 
 FPS = 30
@@ -17,7 +18,7 @@ def render_with_remotion(
     shots: list[Shot],
     voice_path: str,
     music_path: str | None,
-    captions_path: str | None,  # captions are derived from shot text in the template
+    caption_segments: list[CaptionSegment],
     out_path: str,
     *,
     dry_run: bool = False,
@@ -51,10 +52,18 @@ def render_with_remotion(
         shot_props.append(
             {
                 "img": f"jobs/{job_id}/shot_{i:03d}.png",
-                "caption": shot.narration,
                 "durationInFrames": max(1, round(shot.seconds * FPS)),
             }
         )
+
+    captions = [
+        {
+            "text": seg.text,
+            "from": max(0, round(seg.start * FPS)),
+            "durationInFrames": max(1, round((seg.end - seg.start) * FPS)),
+        }
+        for seg in caption_segments
+    ]
 
     shutil.copy(voice_path, os.path.join(public, "voice.mp3"))
     music_rel = None
@@ -65,6 +74,7 @@ def render_with_remotion(
     props = {
         "fps": FPS,
         "shots": shot_props,
+        "captions": captions,
         "voice": f"jobs/{job_id}/voice.mp3",
         "music": music_rel,
     }

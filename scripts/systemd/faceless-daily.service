@@ -1,0 +1,17 @@
+# Faceless daily run (systemd one-shot).
+# Install: see scripts/systemd/README.md
+[Unit]
+Description=Faceless daily content factory run
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Adjust to your install path and the Python that has `faceless` installed.
+WorkingDirectory=/opt/Faceless
+ExecStart=/opt/Faceless/.venv/bin/python -m faceless.cli daily --produce-limit 7 --spread-minutes 90
+# Settings/keys are read from /opt/Faceless/.env (pydantic-settings, WorkingDirectory).
+# Optionally pin an env file instead:
+# EnvironmentFile=/opt/Faceless/.env
+User=faceless
+Group=faceless

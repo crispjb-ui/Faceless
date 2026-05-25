@@ -4,7 +4,13 @@ import json
 import os
 from dataclasses import dataclass
 
-from faceless.assets import generate_captions, generate_images, select_music, synthesize_voiceover
+from faceless.assets import (
+    build_captions,
+    generate_images,
+    select_music,
+    synthesize_voiceover,
+    write_srt,
+)
 from faceless.compliance import check_compliance
 from faceless.config import get_settings
 from faceless.db import Candidate, Idea, JobStatus, Script, VideoJob, get_session, init_db
@@ -116,10 +122,11 @@ def _build_assets_and_render(
     synthesize_voiceover(script.body, niche, voice_path, dry_run=dry_run)
     image_paths = generate_images(script.shots, os.path.join(job_dir, "img"), dry_run=dry_run)
     select_music(niche, music_path, dry_run=dry_run)
-    generate_captions(script.shots, voice_path, captions_path, dry_run=dry_run)
+    caption_segments = build_captions(script.shots, voice_path, dry_run=dry_run)
+    write_srt(caption_segments, captions_path)
     render_video(
         image_paths, script.shots, voice_path, music_path, captions_path, video_path,
-        dry_run=dry_run,
+        caption_segments=caption_segments, dry_run=dry_run,
     )
     if image_paths:
         make_thumbnail(image_paths[0], thumb_path, dry_run=dry_run)

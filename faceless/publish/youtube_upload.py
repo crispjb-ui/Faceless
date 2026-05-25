@@ -16,6 +16,14 @@ class UploadResult:
     url: str
 
 
+def authorize() -> str:
+    """Run the OAuth consent flow (if needed) and cache the token. Returns the
+    token file path. Use this once on a machine with a browser, then copy the
+    token file to a headless server."""
+    _get_credentials()
+    return get_settings().youtube_token_file
+
+
 def _get_credentials():
     """Load cached OAuth creds, refreshing or running the consent flow as needed."""
     from google.auth.transport.requests import Request

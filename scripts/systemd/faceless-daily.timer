@@ -1,0 +1,11 @@
+# Triggers faceless-daily.service every day at 14:00 UTC.
+[Unit]
+Description=Run the Faceless daily factory once per day
+
+[Timer]
+OnCalendar=*-*-* 14:00:00 UTC
+# Catch up if the machine was off at the scheduled time.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

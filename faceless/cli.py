@@ -169,6 +169,19 @@ def analytics(dry_run: bool = typer.Option(False, "--dry-run")) -> None:
     console.print(f"Captured metrics for {n} upload(s).")
 
 
+@app.command("youtube-auth")
+def youtube_auth() -> None:
+    """Run the YouTube OAuth consent flow and cache the token file.
+
+    Do this once on a machine with a browser; then copy the resulting token file
+    to your headless server so scheduled uploads work without interaction.
+    """
+    from faceless.publish.youtube_upload import authorize
+
+    path = authorize()
+    console.print(f"[green]Authorized.[/green] Token saved to {path}")
+
+
 @app.command()
 def doctor() -> None:
     """Check which integrations are configured and ready."""

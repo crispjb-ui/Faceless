@@ -45,9 +45,15 @@ review → refresh analytics. The human approval gate sits between runs.
 faceless daily --produce-limit 7 --spread-minutes 90   # one cycle (for cron)
 ```
 
-Schedule it with cron (see `scripts/cron.example`) or Prefect:
+Run it **hands-off, no manual trigger** with a systemd timer (recommended — see
+`scripts/systemd/README.md`), cron (`scripts/cron.example`), or Prefect:
 
 ```bash
+# systemd (always-on VM): runs daily at 14:00 UTC, catches up if the box was off
+sudo cp scripts/systemd/faceless-daily.* /etc/systemd/system/
+sudo systemctl daemon-reload && sudo systemctl enable --now faceless-daily.timer
+
+# or Prefect (with a UI + retries)
 pip install -e ".[orchestration]"
 python -m faceless.orchestrator.prefect_flow   # serves a daily 14:00 UTC schedule
 ```
@@ -71,7 +77,7 @@ Copy `.env.example` to `.env`. Keys are optional until a stage needs one:
 | Distribution | `DISTRIBUTION_API_KEY` (multi-platform posting SaaS) |
 | Object storage (optional) | `STORAGE_*` (Cloudflare R2 / S3) |
 
-New here? Follow **[docs/RUNBOOK.md](docs/RUNBOOK.md)** — the day-1 → first-published-video checklist.
+New here? Get every credential with **[docs/SETUP_ACCOUNTS.md](docs/SETUP_ACCOUNTS.md)** (click-by-click), then follow **[docs/RUNBOOK.md](docs/RUNBOOK.md)** — the day-1 → first-published-video checklist.
 
 ## Implemented vs. wire-up-required
 
