@@ -1,6 +1,29 @@
 # TikTok Shop Affiliate Strategy — Practical Playbook
 
-*Tailored for: a 43-year-old US (southeast) beginner · $5,000 budget · 10–25 hrs/week · open to on-camera · affiliate model (no inventory). Research current as of June 2026.*
+*Tailored for: a 43-year-old US (southeast) beginner · licensed pharmacist · lifts/works out · $5,000 budget · 10–25 hrs/week · open to on-camera · affiliate model (no inventory). Research current as of June 2026.*
+
+---
+
+## ⭐ Your edge: pharmacist + lifter = the supplements/fitness niche (reverses the "avoid supplements" advice below)
+
+The general playbook tells beginners to avoid supplements (ban-trap). **For you, do the opposite — with discipline.** A licensed pharmacist who lifts is a rare, high-trust, differentiated voice, and health/wellness + fitness is a top-3 GMV category.
+
+- **Why it's open to you:** the supplement restrictions are mostly *seller-side* (listing/selling = invite-only + lab tests). As an **affiliate promoting already-listed products** you just need 5,000 followers + compliant content. Products must keep a **VoC Index < 1.5** to stay affiliate-eligible — promote well-reviewed sellers.
+- **Niche positioning:** *"Pharmacist who lifts — evidence-based supplements & training for men over 40."* Your best content is the thing only you can make: **debunking supplement hype / honest "is it worth it" reviews.** Builds trust AND sells the legit stuff.
+- **Trending fitness products:** creatine, protein, pre-workout, anti-inflammatory blends, collagen/longevity, recovery/training gear.
+
+### 🚨 Claims discipline (non-negotiable — your credential is also your biggest liability)
+
+You'll be *tempted to say more than allowed* because you know the pharmacology. Three layers of exposure:
+
+1. **TikTok Shop health rules:** frame around **hydration, energy, recovery, sleep, focus, "supports normal muscle function."** ❌ No weight-loss/muscle-gain as the *central* claim; no "guaranteed/effortless/permanent"; no **disease** language (treat/cure/prevent/"lowers BP"/"reduces inflammation"); **no GLP-1 claims or comparisons** (2026 crackdown). Structure/function = OK; disease = account death.
+2. **FTC/FDA — higher bar as an "expert endorser":** health claims need "competent and reliable scientific evidence" (RCTs); **endorsers are personally liable** for deceptive claims; 2025 enforcement intensified sharply (MAHA Commission → FDA/FTC scrutiny). Always disclose `#ad`/commission in-video + description.
+3. **Your pharmacy license:** check your **state Board of Pharmacy** rules on endorsements/advice. General *education* = safe; *individualized advice* ("you should take X for your condition") drifts toward standard-of-care/board exposure. Keep an explicit "education, not medical advice — see your provider" posture. Don't risk your license for commissions.
+
+### Channel strategy (don't rely on TikTok Shop affiliate alone)
+- **TikTok Shop affiliate** — volume play (compliant supplements + training/recovery gear).
+- **Fullscript** — professional-grade dispensary platform for clinicians; higher trust + margin, *leverages your license* (verify current commission terms).
+- **Expert-endorser brand deals** — brands pay a real pharmacist a premium; becomes your biggest revenue line as you grow, but highest substantiation/liability duty — vet every product/contract.
 
 ---
 
